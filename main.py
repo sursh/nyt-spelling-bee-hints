@@ -29,4 +29,7 @@ if __name__ == '__main__':
 
     for word in dictionary:
         if center_letter in word and set(word).issubset(letters):
-            print(word)
+            if set(word) == set(letters):
+                print(word, '  <- PANGRAM')
+            else:
+                print(word)
