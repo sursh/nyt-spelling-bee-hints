@@ -1,4 +1,7 @@
 import argparse
+import json
+import requests
+from bs4 import BeautifulSoup
 
 
 DICT_FILENAME = 'dictionary.txt'
@@ -20,12 +23,38 @@ def load_letters(l):
     return center_letter, set(l)
 
 
+def get_puzzle(url='https://www.nytimes.com/puzzles/spelling-bee'):
+    response = requests.get(url)
+    html_page = response.text
+    soup = BeautifulSoup(html_page, 'html.parser')
+
+    # The answers are in embedded Javascript
+    script = str(soup.script.contents[0])
+    # Remove the only part of the script that's not json
+    script = script[18:]
+    return json.loads(script)
+
+
+def get_answers(day='today'):
+    assert(day in ['today', 'yesterday'])
+    puzzle = get_puzzle()
+    return puzzle[day]['pangrams'], puzzle[day]['answers']
+
+
+def get_letters(day='today'):
+    assert(day in ['today', 'yesterday'])
+    puzzle = get_puzzle()
+    return puzzle[day]['centerLetter'], puzzle[day]['validLetters']
+
+
 if __name__ == '__main__':
 
-    # Set up
+    # Load words
+    dictionary = load_dictionary(DICT_FILENAME)
+
+    # Get letters from CLI args
     parser = argparse.ArgumentParser(description='Process today\'s letters')
     parser.add_argument('letters')
-    dictionary = load_dictionary(DICT_FILENAME)
     center_letter, letters = load_letters(parser.parse_args().letters)
 
     # Go through each dictionary word, seeing if it's a match!
@@ -36,3 +65,9 @@ if __name__ == '__main__':
                 print(word, '  <- PANGRAM')
             else:
                 print(word)
+
+    # Get the letters from the actual puzzle
+    center_letter, all_letters = get_letters()
+
+    # Get the answers from the actual puzzle
+    pangrams, answers = get_answers()
