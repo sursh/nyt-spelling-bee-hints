@@ -98,5 +98,5 @@ if __name__ == '__main__':
     for answer in answers:
         # print(answer, get_related_word(answer, 3))
         print("Hint: ",
-              format_multiple_word_hint(get_related_word(answer, 3)),
-              "(", answer, ")")
+              format_multiple_word_hint(get_related_word(answer, 3)))
+        input("\nHit any key for more hints!\n")
