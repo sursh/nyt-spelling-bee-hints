@@ -99,4 +99,4 @@ if __name__ == '__main__':
         # print(answer, get_related_word(answer, 3))
         print("Hint: ",
               format_multiple_word_hint(get_related_word(answer, 3)))
-        input("\nHit any key for more hints!\n")
+        input("\nHit return for more hints!\n")
