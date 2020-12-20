@@ -1,5 +1,6 @@
 import argparse
 import json
+import random
 import requests
 from bs4 import BeautifulSoup
 
@@ -83,10 +84,15 @@ def format_multiple_word_hint(hints):
     return ', '.join(hints)
 
 
-if __name__ == '__main__':
+def give_all_hints_sequentially(answers):
+    for answer in answers:
+        print("Hint: ",
+              format_multiple_word_hint(get_related_word(answer, 3)))
+        input("\nHit return for more hints!\n")
 
-    # Load words
-    dictionary = load_dictionary(DICT_FILENAME)
+
+
+if __name__ == '__main__':
 
     # Get the letters from the actual puzzle
     center_letter, letters = get_letters()
@@ -94,9 +100,6 @@ if __name__ == '__main__':
     # Get the answers from the actual puzzle
     pangrams, answers = get_answers()
 
-    # Give a hint for each word
-    for answer in answers:
-        # print(answer, get_related_word(answer, 3))
-        print("Hint: ",
-              format_multiple_word_hint(get_related_word(answer, 3)))
-        input("\nHit return for more hints!\n")
+    # Give a single hint
+    answer = random.choice(answers)
+    print("Hint: ", format_multiple_word_hint(get_related_word(answer, 3)))
