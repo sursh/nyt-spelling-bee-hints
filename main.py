@@ -1,9 +1,11 @@
 import argparse
+from flask import Flask
 import json
 import random
 import requests
 from bs4 import BeautifulSoup
 
+app = Flask(__name__)
 
 DICT_FILENAME = 'dictionary.txt'
 
@@ -90,6 +92,14 @@ def give_all_hints_sequentially(answers):
               format_multiple_word_hint(get_related_word(answer, 3)))
         input("\nHit return for more hints!\n")
 
+
+@app.route('/')
+def give_single_hint():
+    center_letter, letters = get_letters()
+    pangrams, answers = get_answers()
+
+    answer = random.choice(answers)
+    return "Hint: " + format_multiple_word_hint(get_related_word(answer, 3))
 
 
 if __name__ == '__main__':
